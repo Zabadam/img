@@ -1,5 +1,7 @@
 /// Provides a `DecorationImage` "too" that passes on its `Repeat` property
 /// to its [paintImageToo] call.
+//
+//  Consider LICENSE file, as some code comes from the Flutter source itself.
 library img;
 
 import '../common.dart';
@@ -54,8 +56,8 @@ class DecorationImageToo implements DecorationImage {
 
   /// How the image should be inscribed into the box.
   ///
-  /// The default is [BoxFit.scaleDown] if [centerSlice] is null, and
-  /// [BoxFit.fill] if [centerSlice] is not null.
+  /// The default is [BoxFit.scaleDown] if [centerSlice] is `null`, and
+  /// [BoxFit.fill] if [centerSlice] is not `null`.
   ///
   /// See the discussion at [paintImage] (the vanilla FLutter image painting
   /// method) for more details.
@@ -153,7 +155,7 @@ class DecorationImageToo implements DecorationImage {
   /// the center slice will be stretched only vertically.
   ///
   /// The stretching will be applied in order to make the image fit into the box
-  /// specified by [fit]. When [centerSlice] is not null, [fit] defaults to
+  /// specified by [fit]. When [centerSlice] is not `null`, [fit] defaults to
   /// [BoxFit.fill], which distorts the destination image size relative to the
   /// image's original aspect ratio. Values of [BoxFit] which do not distort the
   /// destination image size will result in [centerSlice] having no effect
@@ -174,9 +176,9 @@ class DecorationImageToo implements DecorationImage {
 
   /// Creates a [DecorationImagePainterToo] for this [DecorationImageToo].
   ///
-  /// The `onChanged` argument must not be null. It will be called whenever the
-  /// image needs to be repainted, e.g. because it is loading incrementally or
-  /// because it is animated.
+  /// The `onChanged` argument must not be `null`.
+  /// It will be called whenever the image needs to be repainted,
+  /// e.g. because it is loading incrementally or because it is animated.
   @override
   DecorationImagePainter createPainter(VoidCallback onChanged) =>
       DecorationImagePainterToo._(this, onChanged);

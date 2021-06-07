@@ -3,8 +3,8 @@
 #### API References: [`Repeat`](https://pub.dev/documentation/img/latest/img/Repeat-class.html) | [`ImageToo`](https://pub.dev/documentation/img/latest/img/ImageToo-class.html) | [`ImageDecorationToo`](https://pub.dev/documentation/img/latest/img/ImageDecorationToo-class.html) | [`paintImageToo()`](https://pub.dev/documentation/img/latest/img/paintImageToo.html) | [`InkImg`](https://pub.dev/documentation/img/latest/img/InkImg-class.html)
 
 ## 🙋‍♂️ I'm an `Image` Too!
-Easily render mirror-tiling images for seamless edge-to-edge textures from
-any source. Defines Repeat, an expansion on ImageRepeat that supports
+Easily paint mirror-tiling images for seamless edge-to-edge textures from
+any source. Defines Repeat, an expansion on ImageRepeat that enables
 mirroring, as well as the Widgets, extensions, and methods to support it.
 
 An `ImageToo` or `DecorationImageToo` is used to render images from the
@@ -12,7 +12,7 @@ expected array of sources, but their `repeat` property is expanded.
 
 The secret sauce is the [`Repeat`](https://pub.dev/documentation/img/latest/img/Repeat-class.html)
 enum with the standard options from `ImageRepeat`, such as `noRepeat` and
-`repeatX`, as well as bespoke `mirror` values, spanning `mirrorX`, `mirrorY`,
+`repeatX`, as well as bespoke mirror values, spanning `mirrorX`, `mirrorY`,
 and global `mirror`.
 
 [![animation demonstrating the example app](https://raw.githubusercontent.com/Zabadam/img/main/doc/example.gif)](https://pub.dev/packages/img/example 'animation demonstrating the example app')
@@ -21,9 +21,17 @@ This package forks several of Flutter's vanilla classes and `Widget`s,
 rigging them to drive an alternate paint method that is the real meat and
 potatoes of 🙋‍♂️ [`img`](https://pub.dev/packages/img).
 
-Predictably named `paintImageToo()`, this method performs mostly the same as
-the built-in `paintImage()` method, but it does make a few considerations for
-the repeat styles.
+Predictably named [`paintImageToo()`](https://pub.dev/documentation/img/latest/img/paintImageToo.html),
+this method performs mostly the same as the built-in `paintImage()` method,
+but it does make a few considerations for the repeat styles.
+- Namely, if you are interested, within the standard tile generation method
+  employed for `ImageRepeat.repeat`, an extra pair of values is provided back
+  to the main painting body.
+  - These "proximities" are values whose parity (even/oddness) dictate whether
+  an image needs to be mirrored before painting. More specifically, the canvas
+  itself is mirrored, the image is painted, then the canvas is restored.
+  - The original source tile image would be `Proximity(0,0)`, and the `Rect`
+  directly to its right would have `Proximity(1,0)`.
  
 Some images fare better than others as far as the quality of the output.
 Most will appear kaleidoscopic at worst and magical at best.
@@ -37,7 +45,7 @@ To place an image directly into an application *as a `Widget`*, employ a
 `new ImageToo(. . .)`.
 
 ```dart
-void main() => runApp(const Example0());
+void main() => runApp(const Example());
 
 class Example extends StatelessWidget {
   const Example({Key? key}): super(key: key);
@@ -63,9 +71,9 @@ class Example extends StatelessWidget {
 }
 ```
 
-|                                                               Sample code output                                                               |                                                      Original image (1x tile)                                                       |
-| :--------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------: |
-| ![Sample code output](https://raw.githubusercontent.com/Zabadam/img/main/doc/readme_sample0.gif 'Sample code output, `repeat: Repeat.mirror`') | ![Original image (1x tile)](https://gifimage.net/wp-content/uploads/2017/08/transparent-fire-gif-22.gif 'Original image (1x tile)') |
+|                                                                                                     Sample code output                                                                                                      |                                                                                              Original image (1x tile)                                                                                              |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [![Sample code output](https://raw.githubusercontent.com/Zabadam/img/main/doc/readme_sample0.gif 'Sample code output, `repeat: Repeat.mirror`')](https://raw.githubusercontent.com/Zabadam/img/main/doc/readme_sample0.gif) | [![Original image (1x tile)](https://gifimage.net/wp-content/uploads/2017/08/transparent-fire-gif-22.gif 'Original image (1x tile)')](https://gifimage.net/wp-content/uploads/2017/08/transparent-fire-gif-22.gif) |
 
 This shiny new `Repeat` with its mirror values can also be used to decorate a
 `Container` or anywhere else `DecorationImage` might typically be placed.
@@ -125,18 +133,21 @@ class ExampleBody extends StatelessWidget {
 }
 ```
 
-| Sample code output                                                                                                                             | Original image (1x tile)                                                                                                            |
-| :--------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| ![Sample code output](https://raw.githubusercontent.com/Zabadam/img/main/doc/readme_sample1.gif 'Sample code output, `repeat: Repeat.mirror`') | ![Original image (1x tile)](https://gifimage.net/wp-content/uploads/2017/08/transparent-fire-gif-22.gif 'Original image (1x tile)') |
+| Sample code output                                                                                                                                                                                                          | Original image (1x tile)                                                                                                                                                                                           |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Sample code output](https://raw.githubusercontent.com/Zabadam/img/main/doc/readme_sample1.gif 'Sample code output, `repeat: Repeat.mirror`')](https://raw.githubusercontent.com/Zabadam/img/main/doc/readme_sample1.gif) | [![Original image (1x tile)](https://gifimage.net/wp-content/uploads/2017/08/transparent-fire-gif-22.gif 'Original image (1x tile)')](https://gifimage.net/wp-content/uploads/2017/08/transparent-fire-gif-22.gif) |
 
 ## Advanced Usage
 
 ### Extension Methods
+For your consideration is an extension for making a quick textured surface from
+a single url as `String.toSeamlessTexture()`.
+
 ```dart
 /// URL leading to a Tatsuro Yamashita album cover.
 const tatsu = 'https://spice.eplus.jp/images/KefMrp9J1bM7NGRvFqK64ZNOfbTGUDKVCC8ePaiKB1cOcOJz1rEN3DQUJMBZhQJ2.jpg';
 
-/// Extension methods
+/// Extension method
 final extensionExamples = <Widget>[
   tatsu.toSeamlessTexture(),
   tatsu.toSeamlessTexture(scale: 10),
@@ -148,19 +159,33 @@ final extensionExamples = <Widget>[
 ```
 
 Expect output from these widgets to resemble something like this:
+
 [![This code sample comes from the package example](https://raw.githubusercontent.com/Zabadam/img/main/doc/extensions.gif)](https://pub.dev/packages/img/example 'This code sample comes from the package example')
+
+Beyond `'https://url.to/image.png'.toSeamlessTexture()`, consider:
+
+```dart
+'https://url.to/image.png'.toSeamlessRow();
+'https://url.to/image.png'.toSeamlessColumn();
+
+'res/image.gif'.toSeamlessTexture(isAsset: true, package: 'package_name');
+
+File.toSeamlessColumn();
+Uint8List.toSeamlessRow();
+```
 
 ### 🙋‍♂️ `InkImg`
 Extends `Ink` and has the same paramters as `Ink.image`, but creates an ink
-decoration with a `DecorationImg` that supports `Repeat`ing (mirroring 😉).
+decoration with a `DecorationImageToo` that supports `Repeat`ing (mirroring 😉).
 
-For your consideration is an extension for making a quick textured surface from
-a single url as `String.toSeamlessTexture()`.
+Additionally, the original `Ink.image` does not pass a color to its decoration,
+but `InkImg` will. This optional color is painted behind the image.
 
----
+### ❗ Note
 
 When using any of the new mirror modes as the `repeat` property, the
-`paintImageToo` method will override the image's alignment to `Alignment.center`.
+[`paintImageToo()`](https://pub.dev/documentation/img/latest/img/paintImageToo.html)
+method will override the image's alignment to `Alignment.center`.
 
 This is a workaround at the moment for invalid rendering when alignment is not
 centered.
@@ -171,10 +196,10 @@ image for the corresponding offset component, `dx` or `dy`; but this only
 *mimics* "alignment" with a `Repeat.mirror` tiled image that is meant to fill
 an entire space.
 
-That is, for an image with the resolution 400✖400, an `ImageToo` or
-`DecorationImageToo` may have a tile shift maxing out at `Offset(400,400)`
-and defaulting to `Offset.none` applied as its `mirrorOffset` property
-when its repeat is set one of the mirror modes.
+That is, for an image with the resolution 600✖400, an `ImageToo` or
+`DecorationImageToo` may have a tile shift maxing out at `Offset(600,400)`
+(and defaulting to `Offset.none`) applied as its `mirrorOffset` property
+when its repeat is set to one of the mirror modes.
 
 Stay tuned if you would like to, say, align the image left and also
 `Repeat.mirrorY`.
@@ -185,23 +210,21 @@ In order to dig deep enough to the painting method, several intermediate
 image "too" classes had to be forked. All told, from order of direct
 developer relevance:
 
-| <h4>🙋‍♂️ `ImageToo`</h4> | <h5>(`Img`)</h5> |
-| :-------------------- | :--------------- |
+#### 🙋‍♂️ `ImageToo`
+\- Shorthand: `Img`
 
-A stateful widget, either `const` via `ImageProvider` or through a variety of
-named convenience constructors, that passes along the new `Repeat` value.
-Consider `ImageToo.asset` or `ImageToo.network`, etc.
+A stateful widget, either `const` via `ImageProvider` or through a variety of named convenience constructors, that passes along the new `Repeat` value. Consider `ImageToo.asset` or `ImageToo.network`, etc.
 
-| <h4>🙋‍♂️ `DecorationImageToo`</h4> | <h5>(`DecorationImg`)</h5> |
-| :------------------------------ | :------------------------- |
+#### 🙋‍♂️ `DecorationImageToo`
+\- Shorthand: `DecorationImg`
 
-A `Repeat`-conscious variant of a `Decoration.image`-fulfilling
-`DecorationImage`.
+A `Repeat`-conscious variant of a `Decoration.image`-fulfilling `DecorationImage`.
 
 | <h4>🙋‍♂️ `RawImageToo`</h4> | <h4>🙋‍♂️ `RenderImageToo`</h4> |
-| :----------------------- | :-------------------------- |
+| :----------------------: | :-------------------------: |
 
-Not currently exported with the package. Could be. Should they be? \
+Not currently exported with the package. Could be. Should they be?
+
 Dart abstraction and `LeafRenderObjectWidget` created by an `ImageToo` that
 then creates the `RenderBox`.
 

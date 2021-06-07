@@ -1,7 +1,7 @@
 name: img
 description: >
-  Easily render mirror-tiling images for seamless edge-to-edge textures from
-  any source. Defines Repeat, an expansion on ImageRepeat that supports
+  Easily paint mirror-tiling images for seamless edge-to-edge textures from
+  any source. Defines Repeat, an expansion on ImageRepeat that enables
   mirroring, as well as the Widgets, extensions, and methods to support it.
 
 version: 0.1.0

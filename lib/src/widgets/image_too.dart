@@ -4,6 +4,8 @@
 /// creating a [RenderImageToo]; all fully aware of the new `Repeat` type and
 /// deferrent to a new `paintImageToo()` method as opposed to the traditional
 /// `paintImage()` call.
+//
+//  Consider LICENSE file, as some code comes from the Flutter source itself.
 library img;
 
 import 'dart:io' show File;
@@ -12,9 +14,10 @@ import 'dart:typed_data';
 import '../common.dart';
 
 import '../rendering.dart';
+import '../utils.dart';
 
 /// A [StatefulWidget] that renders an [image] according to a swath of
-/// optional properties. Several constructors are provided for drawing an
+/// optional properties. Several constructors are provided for painting an
 /// image from a variety of sources.
 ///
 /// Abstracts the rendering of a `dart:ui` `Image` by returning a configured
@@ -41,21 +44,36 @@ import '../rendering.dart';
 ///
 /// [new ImageToo.memory] constructs an image from a [Uint8List] of bytes.
 class ImageToo extends StatefulWidget {
-  /// A [StatefulWidget] that renders its required [image] field, an
-  /// [ImageProvider], according to the other optional properties.
+  /// A [StatefulWidget] that renders its required [image] field, an [ImageProvider], \
+  /// according to the other optional properties.
   ///
   /// This image `Widget` supports an expanded concept of `ImageRepeat` defined
-  /// as [Repeat]. Thus this `ImageToo` can render an image smaller than its
-  /// bounds by mirror-tiling with [Repeat.mirror] as well as the expected
-  /// values such as [Repeat.noRepeat], [Repeat.repeat], etc.
+  /// as [Repeat].
   ///
-  /// Like all `package:img` classes, `alignment` is ignored and forced
-  /// [Alignment.center] if [repeat] is set to [Repeat.mirror],
-  /// [Repeat.mirrorX], or [Repeat.mirrorY].
-  /// - To align/position the seamlessly-tiling image in this situation, employ
-  ///   an [Offset] in the [mirrorOffset] field.
-  /// - This is a workaround for now and only aids in shifting a `Repeat.mirror`
-  ///   tiled image that is meant to fill an entire space.
+  /// Thus this `ImageToo` can render an image smaller than its
+  /// bounds by mirror-tiling with \
+  /// [Repeat.mirror] as well as the expected values such as [Repeat.noRepeat],
+  /// [Repeat.repeat], etc.
+  ///
+  /// For convenience, consider [StringToTexture]. It is used by calling one of
+  /// the three methods \
+  /// (one each for [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY])
+  /// on a `String` such as:
+  ///
+  /// ```dart
+  /// final Widget imageToo = 'https://url.to/image.png'.toSeamlessTexture();
+  /// ```
+  ///
+  /// For a `const ImageToo`, construct a [new ImageToo] with an [ImageProvider]
+  /// as the `image` property.
+  ///
+  /// ---
+  /// Like all `package:img` classes, `alignment` is ignored and forced [Alignment.center] \
+  /// if [repeat] is set to [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY].
+  /// - To align/position the seamlessly-tiling image in this situation, \
+  ///   employ an [Offset] in the [mirrorOffset] field.
+  /// - This is a workaround for now and only aids in "aligning" a `Repeat.mirror` \
+  /// tiled image if it is meant to fill an entire space, shifting its edges.
   const ImageToo({
     Key? key,
     required this.image,
@@ -80,23 +98,36 @@ class ImageToo extends StatefulWidget {
   }) : super(key: key);
 
   /// A [StatefulWidget] that renders an image from a web server defined by the
-  /// URL [src], the required `String` at the front of this constructor.
+  /// URL [src], \
+  /// the required `String` at the front of this constructor.
   ///
   /// This image `Widget` supports an expanded concept of `ImageRepeat` defined
-  /// as [Repeat]. Thus this `ImageToo` can render an image smaller than its
-  /// bounds by mirror-tiling with [Repeat.mirror] as well as the expected
-  /// values such as [Repeat.noRepeat], [Repeat.repeat], etc.
+  /// as [Repeat].
+  ///
+  /// Thus this `ImageToo` can render an image smaller than its
+  /// bounds by mirror-tiling with \
+  /// [Repeat.mirror] as well as the expected values such as [Repeat.noRepeat],
+  /// [Repeat.repeat], etc.
+  ///
+  /// For convenience, consider [StringToTexture]. It is used by calling one of
+  /// the three methods \
+  /// (one each for [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY])
+  /// on a `String` such as:
+  ///
+  /// ```dart
+  /// final Widget imageToo = 'https://url.to/image.png'.toSeamlessTexture();
+  /// ```
   ///
   /// For a `const ImageToo`, construct a [new ImageToo] with an [ImageProvider]
   /// as the `image` property.
   ///
-  /// Like all `package:img` classes, `alignment` is ignored and forced
-  /// [Alignment.center] if [repeat] is set to [Repeat.mirror],
-  /// [Repeat.mirrorX], or [Repeat.mirrorY].
-  /// - To align/position the seamlessly-tiling image in this situation, employ
-  ///   an [Offset] in the [mirrorOffset] field.
-  /// - This is a workaround for now and only aids in shifting a `Repeat.mirror`
-  ///   tiled image that is meant to fill an entire space.
+  /// ---
+  /// Like all `package:img` classes, `alignment` is ignored and forced [Alignment.center] \
+  /// if [repeat] is set to [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY].
+  /// - To align/position the seamlessly-tiling image in this situation, \
+  ///   employ an [Offset] in the [mirrorOffset] field.
+  /// - This is a workaround for now and only aids in "aligning" a `Repeat.mirror` \
+  /// tiled image if it is meant to fill an entire space, shifting its edges.
   ImageToo.network(
     String src, {
     Key? key,
@@ -132,20 +163,32 @@ class ImageToo extends StatefulWidget {
   /// at the front of this constructor.
   ///
   /// This image `Widget` supports an expanded concept of `ImageRepeat` defined
-  /// as [Repeat]. Thus this `ImageToo` can render an image smaller than its
-  /// bounds by mirror-tiling with [Repeat.mirror] as well as the expected
-  /// values such as [Repeat.noRepeat], [Repeat.repeat], etc.
+  /// as [Repeat].
+  ///
+  /// Thus this `ImageToo` can render an image smaller than its
+  /// bounds by mirror-tiling with \
+  /// [Repeat.mirror] as well as the expected values such as [Repeat.noRepeat],
+  /// [Repeat.repeat], etc.
+  ///
+  /// For convenience, consider [FileToTexture]. It is used by calling one of
+  /// the three methods \
+  /// (one each for [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY])
+  /// on a `File` such as:
+  ///
+  /// ```dart
+  /// final Widget imageToo = File(...).toSeamlessTexture();
+  /// ```
   ///
   /// For a `const ImageToo`, construct a [new ImageToo] with an [ImageProvider]
   /// as the `image` property.
   ///
-  /// Like all `package:img` classes, `alignment` is ignored and forced
-  /// [Alignment.center] if [repeat] is set to [Repeat.mirror],
-  /// [Repeat.mirrorX], or [Repeat.mirrorY].
-  /// - To align/position the seamlessly-tiling image in this situation, employ
-  ///   an [Offset] in the [mirrorOffset] field.
-  /// - This is a workaround for now and only aids in shifting a `Repeat.mirror`
-  ///   tiled image that is meant to fill an entire space.
+  /// ---
+  /// Like all `package:img` classes, `alignment` is ignored and forced [Alignment.center] \
+  /// if [repeat] is set to [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY].
+  /// - To align/position the seamlessly-tiling image in this situation, \
+  ///   employ an [Offset] in the [mirrorOffset] field.
+  /// - This is a workaround for now and only aids in "aligning" a `Repeat.mirror` \
+  /// tiled image if it is meant to fill an entire space, shifting its edges.
   ImageToo.file(
     File file, {
     Key? key,
@@ -181,20 +224,32 @@ class ImageToo extends StatefulWidget {
   /// the front of this constructor.
   ///
   /// This image `Widget` supports an expanded concept of `ImageRepeat` defined
-  /// as [Repeat]. Thus this `ImageToo` can render an image smaller than its
-  /// bounds by mirror-tiling with [Repeat.mirror] as well as the expected
-  /// values such as [Repeat.noRepeat], [Repeat.repeat], etc.
+  /// as [Repeat].
+  ///
+  /// Thus this `ImageToo` can render an image smaller than its
+  /// bounds by mirror-tiling with \
+  /// [Repeat.mirror] as well as the expected values such as [Repeat.noRepeat],
+  /// [Repeat.repeat], etc.
+  ///
+  /// For convenience, consider [StringToTexture]. It is used by calling one of
+  /// the three methods \
+  /// (one each for [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY])
+  /// on a `String` such as:
+  ///
+  /// ```dart
+  /// final Widget imageToo = 'res/image.png'.toSeamlessTexture(isAsset: true);
+  /// ```
   ///
   /// For a `const ImageToo`, construct a [new ImageToo] with an [ImageProvider]
   /// as the `image` property.
   ///
-  /// Like all `package:img` classes, `alignment` is ignored and forced
-  /// [Alignment.center] if [repeat] is set to [Repeat.mirror],
-  /// [Repeat.mirrorX], or [Repeat.mirrorY].
-  /// - To align/position the seamlessly-tiling image in this situation, employ
-  ///   an [Offset] in the [mirrorOffset] field.
-  /// - This is a workaround for now and only aids in shifting a `Repeat.mirror`
-  ///   tiled image that is meant to fill an entire space.
+  /// ---
+  /// Like all `package:img` classes, `alignment` is ignored and forced [Alignment.center] \
+  /// if [repeat] is set to [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY].
+  /// - To align/position the seamlessly-tiling image in this situation, \
+  ///   employ an [Offset] in the [mirrorOffset] field.
+  /// - This is a workaround for now and only aids in "aligning" a `Repeat.mirror` \
+  /// tiled image if it is meant to fill an entire space, shifting its edges.
   ImageToo.asset(
     String name, {
     Key? key,
@@ -238,20 +293,32 @@ class ImageToo extends StatefulWidget {
   /// of this constructor.
   ///
   /// This image `Widget` supports an expanded concept of `ImageRepeat` defined
-  /// as [Repeat]. Thus this `ImageToo` can render an image smaller than its
-  /// bounds by mirror-tiling with [Repeat.mirror] as well as the expected
-  /// values such as [Repeat.noRepeat], [Repeat.repeat], etc.
+  /// as [Repeat].
+  ///
+  /// Thus this `ImageToo` can render an image smaller than its
+  /// bounds by mirror-tiling with \
+  /// [Repeat.mirror] as well as the expected values such as [Repeat.noRepeat],
+  /// [Repeat.repeat], etc.
+  ///
+  /// For convenience, consider [BytesToTexture]. It is used by calling one of
+  /// the three methods \
+  /// (one each for [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY])
+  /// on a `Uint8List` such as:
+  ///
+  /// ```dart
+  /// final Widget imageToo = Uint8List(...).toSeamlessTexture();
+  /// ```
   ///
   /// For a `const ImageToo`, construct a [new ImageToo] with an [ImageProvider]
   /// as the `image` property.
   ///
-  /// Like all `package:img` classes, `alignment` is ignored and forced
-  /// [Alignment.center] if [repeat] is set to [Repeat.mirror],
-  /// [Repeat.mirrorX], or [Repeat.mirrorY].
-  /// - To align/position the seamlessly-tiling image in this situation, employ
-  ///   an [Offset] in the [mirrorOffset] field.
-  /// - This is a workaround for now and only aids in shifting a `Repeat.mirror`
-  ///   tiled image that is meant to fill an entire space.
+  /// ---
+  /// Like all `package:img` classes, `alignment` is ignored and forced [Alignment.center] \
+  /// if [repeat] is set to [Repeat.mirror], [Repeat.mirrorX], [Repeat.mirrorY].
+  /// - To align/position the seamlessly-tiling image in this situation, \
+  ///   employ an [Offset] in the [mirrorOffset] field.
+  /// - This is a workaround for now and only aids in "aligning" a `Repeat.mirror` \
+  /// tiled image if it is meant to fill an entire space, shifting its edges.
   ImageToo.memory(
     Uint8List bytes, {
     Key? key,
@@ -285,9 +352,9 @@ class ImageToo extends StatefulWidget {
   /// The image to display.
   final ImageProvider image;
 
-  /// If non-null, require the image to have this width.
+  /// If non-`null`, require the image to have this width.
   ///
-  /// If null, the image will pick a size that best preserves its intrinsic
+  /// If `null`, the image will pick a size that best preserves its intrinsic
   /// aspect ratio.
   ///
   /// It is strongly recommended that either both the [width] and the [height]
@@ -297,9 +364,9 @@ class ImageToo extends StatefulWidget {
   /// and height if the exact image dimensions are not known in advance.
   final double? width;
 
-  /// If non-null, require the image to have this height.
+  /// If non-`null`, require the image to have this height.
   ///
-  /// If null, the image will pick a size that best preserves its intrinsic
+  /// If `null`, the image will pick a size that best preserves its intrinsic
   /// aspect ratio.
   ///
   /// It is strongly recommended that either both the [width] and the [height]
@@ -402,7 +469,7 @@ class ImageToo extends StatefulWidget {
   ///    options.
   final FilterQuality filterQuality;
 
-  /// If non-null, this color is blended with each image pixel using
+  /// If non-`null`, this color is blended with each image pixel using
   /// [colorBlendMode].
   final Color? color;
 
@@ -493,7 +560,7 @@ class ImageToo extends StatefulWidget {
   /// A builder function responsible for creating the widget that represents
   /// this image.
   ///
-  /// If this is null, this widget will display an image that is painted as
+  /// If this is `null`, this widget will display an image that is painted as
   /// soon as the first image frame is available (and will appear to "pop" in
   /// if it becomes available asynchronously). Callers might use this builder to
   /// add effects to the image (such as fading the image in when it becomes
@@ -580,7 +647,7 @@ class ImageToo extends StatefulWidget {
   /// A builder that specifies the widget to display to the user while an image
   /// is still loading.
   ///
-  /// If this is null, and the image is loaded incrementally (e.g. over a
+  /// If this is `null`, and the image is loaded incrementally (e.g. over a
   /// network), the user will receive no indication of the progress as the
   /// bytes of the image are loaded.
   ///

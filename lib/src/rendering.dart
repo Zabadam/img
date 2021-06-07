@@ -3,6 +3,8 @@
 ///
 /// A `RenderImageToo` defers to the new [paintImageToo] method as opposed
 /// to the vanilla [paintImage] call.
+//
+//  Consider LICENSE file, as some code comes from the Flutter source itself.
 library img;
 
 import 'dart:ui' as ui show Image;
@@ -54,15 +56,15 @@ class RawImageToo extends LeafRenderObjectWidget {
   /// A string identifying the source of the image.
   final String? debugImageLabel;
 
-  /// If non-null, require the image to have this width.
+  /// If non-`null`, require the image to have this width.
   ///
-  /// If null, the image will pick a size that best preserves its intrinsic
+  /// If `null`, the image will pick a size that best preserves its intrinsic
   /// aspect ratio.
   final double? width;
 
-  /// If non-null, require the image to have this height.
+  /// If non-`null`, require the image to have this height.
   ///
-  /// If null, the image will pick a size that best preserves its intrinsic
+  /// If `null`, the image will pick a size that best preserves its intrinsic
   /// aspect ratio.
   final double? height;
 
@@ -71,7 +73,7 @@ class RawImageToo extends LeafRenderObjectWidget {
   /// Used when determining the best display size for the image.
   final double scale;
 
-  /// If non-null, this color is blended with each image pixel using
+  /// If non-`null`, this color is blended with each image pixel using
   /// [colorBlendMode].
   final Color? color;
 
@@ -407,9 +409,9 @@ class RenderImageToo extends RenderBox {
   /// A string used to identify the source of the image.
   String? debugImageLabel;
 
-  /// If non-null, requires the image to have this width.
+  /// If non-`null`, requires the image to have this width.
   ///
-  /// If null, the image will pick a size that best preserves its intrinsic
+  /// If `null`, the image will pick a size that best preserves its intrinsic
   /// aspect ratio.
   double? get width => _width;
   double? _width;
@@ -421,9 +423,9 @@ class RenderImageToo extends RenderBox {
     markNeedsLayout();
   }
 
-  /// If non-null, require the image to have this height.
+  /// If non-`null`, require the image to have this height.
   ///
-  /// If null, the image will pick a size that best preserves its intrinsic
+  /// If `null`, the image will pick a size that best preserves its intrinsic
   /// aspect ratio.
   double? get height => _height;
   double? _height;
@@ -459,7 +461,7 @@ class RenderImageToo extends RenderBox {
     }
   }
 
-  /// If non-null, this color is blended with each image pixel using
+  /// If non-`null`, this color is blended with each image pixel using
   /// [colorBlendMode].
   Color? get color => _color;
   Color? _color;
@@ -524,7 +526,7 @@ class RenderImageToo extends RenderBox {
   /// How to align the image within its bounds.
   ///
   /// If this is set to a text-direction-dependent value, [textDirection] must
-  /// not be null.
+  /// not be `null`.
   ///
   /// Ignored if [repeat] is [Repeat.mirror], `mirrorX`, or `mirrorY`.
   /// In this context, see [mirrorOffset].
@@ -611,7 +613,7 @@ class RenderImageToo extends RenderBox {
   /// using this, to not flip images with integral shadows, text, or other
   /// effects that will look incorrect when flipped.
   ///
-  /// If this is set to true, [textDirection] must not be null.
+  /// If this is set to true, [textDirection] must not be `null`.
   bool get matchTextDirection => _matchTextDirection;
   bool _matchTextDirection;
   set matchTextDirection(bool value) {
@@ -624,7 +626,7 @@ class RenderImageToo extends RenderBox {
 
   /// The text direction with which to resolve [alignment].
   ///
-  /// This may be changed to null, but only after the [alignment] and
+  /// This may be changed to `null`, but only after the [alignment] and
   /// [matchTextDirection] properties have been changed to values that do not
   /// depend on the direction.
   TextDirection? get textDirection => _textDirection;

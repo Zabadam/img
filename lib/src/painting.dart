@@ -12,6 +12,8 @@
 ///   - Painting the images mirrored is done by manipulating the `canvas` with
 ///   [_mirrorX] or [_mirrorY], painting the `image`, and then reverting that
 ///   transform.
+//
+//  Consider LICENSE file, as some code comes from the Flutter source itself.
 library img;
 
 import 'dart:developer' as developer;
