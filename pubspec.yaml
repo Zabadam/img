@@ -1,0 +1,21 @@
+name: img
+description: >
+  Easily render mirror-tiling images for seamless edge-to-edge textures from
+  any source. Defines Repeat, an expansion on ImageRepeat that supports
+  mirroring, as well as the Widgets, extensions, and methods to support it.
+
+version: 0.1.0
+repository: https://github.com/Zabadam/img
+issue_tracker: https://github.com/Zabadam/img/issues
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies: null
+
+flutter: null

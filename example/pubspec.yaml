@@ -1,0 +1,16 @@
+name: img_example
+description: Example usage of ImageToo and DecorationImageToo.
+version: 0.1.0
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  img:
+    path: ../
+
+flutter:
+  uses-material-design: true
